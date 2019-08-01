@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 
 public class Test {
 
-    static int countOfNameOfFileOutput;
+    static int lableForNameOutputFileName;
+
 
     public static void main(String[] args) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
@@ -16,7 +17,8 @@ public class Test {
         System.out.println("Running time is " + (System.currentTimeMillis() - start) + "ms");
     }
 
-
+    // method for appending all big file in one.
+    // It need for create input big file for main task
     static void appendAllFiles() throws IOException {
         String[] nameOfFiles = {"/Users/admin/Downloads/1/test1.txt",
                 "/Users/admin/Downloads/1/test2.txt",
@@ -39,6 +41,8 @@ public class Test {
         fileOutPut.close();
     }
 
+    // method searching duplicate in one file and store result in on file
+    // it works only with big memory in VM. For example -Xmx10G
     static void checkDuplicate(long start) throws IOException, InterruptedException {
         Map<String, Integer> map = new HashMap();
         File file = new File("/Users/admin/Downloads/1/testZZZ.txt");
@@ -71,10 +75,12 @@ public class Test {
         System.gc();
 
         bufferedReader.close();
-        countOfNameOfFileOutput = 0;
+        lableForNameOutputFileName = 0;
         checkDuplicateInResult(nameOfLists);
     }
 
+    // method should investigate file by file and stick together duplicate
+    // TODO method in progress
     static void checkDuplicateInResult(List<String> names) throws IOException {
         HashMap<String, Integer> map = new HashMap<>();
         int countSize = 0;
@@ -110,6 +116,7 @@ public class Test {
 
     }
 
+    // second parametr need for understanding in went from checkDuplicate() or checkDuplicateInResult()
     static String writeToFile(Map<String, Integer> map, Integer number) throws IOException {
         String pref;
         if (number == 1){
@@ -117,16 +124,17 @@ public class Test {
         } else {
             pref = "result";
         }
-        File file = new File("/Users/admin/Downloads/1/out/" + pref + "/fileOutput" + countOfNameOfFileOutput + ".txt");
+        File file = new File("/Users/admin/Downloads/1/out/" + pref + "/fileOutput" + lableForNameOutputFileName + ".txt");
         PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")), false);
         for (Map.Entry<String, Integer> word : map.entrySet()) {
             writer.println(word.getValue() + " - " + word.getKey());
         }
         writer.close();
-        countOfNameOfFileOutput++;
+        lableForNameOutputFileName++;
         return file.getName();
     }
 
+    // sort map by value
     public static Map<String, Integer> sortByValue(final Map<String, Integer> wordCounts) {
         return wordCounts.entrySet()
                 .stream()
@@ -134,12 +142,14 @@ public class Test {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
+    //display human understanding format of displaying memory
     public static String formatSize(long v) {
         if (v < 1024) return v + " B";
         int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
         return String.format("%.1f %sB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
     }
 
+    // return free memory and display max, total and free memory in console
     static long checkMemory() {
         System.out.print("\r" + (
                 formatSize(Runtime.getRuntime().maxMemory()) + " " +
