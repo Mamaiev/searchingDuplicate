@@ -1,4 +1,4 @@
-package task.TestSizeFolder;
+package com.semitop7.TestSizeFolder;
 
 import java.io.*;
 import java.util.*;
@@ -119,7 +119,7 @@ public class Test {
     // second parametr need for understanding in went from checkDuplicate() or checkDuplicateInResult()
     static String writeToFile(Map<String, Integer> map, Integer number) throws IOException {
         String pref;
-        if (number == 1){
+        if (number == 1) {
             pref = "run";
         } else {
             pref = "result";
@@ -157,5 +157,4 @@ public class Test {
                         formatSize(Runtime.getRuntime().freeMemory())));
         return Runtime.getRuntime().freeMemory();
     }
-
 }

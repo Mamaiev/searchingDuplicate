@@ -1,4 +1,4 @@
-package task.TestSizeFolder;
+package com.semitop7.TestSizeFolder;
 
 import java.io.*;
 
