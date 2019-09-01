@@ -14,6 +14,8 @@ public class Run {
 
     public static void main(String[] args) throws IOException {
         heapInfo.printMaxHeapSize();
-        generator.generateFiles(FILE_COUNT, GB, CHAR_COUNT);
+//        TODO uncomment for generation test files
+//        generator.generateFiles(FILE_COUNT, GB, CHAR_COUNT);
+
     }
 }

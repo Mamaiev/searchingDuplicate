@@ -4,9 +4,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +37,14 @@ public class Generator {
             watch.stop();
             LOGGER.info(format("File: %s, time: %d c\n", name, watch.getTime(TimeUnit.SECONDS)));
         }
+    }
+
+    public String[] generateFilePaths(int count, String filePathFormat) {
+        String[] filePaths = new String[count];
+        for(int i = 1; i<= count; i++) {
+            filePaths[i] = String.format(filePathFormat, count);
+        }
+        return filePaths;
     }
 
     private void writeToFile(String fileName, int fileSize, int stringLength) throws IOException {
