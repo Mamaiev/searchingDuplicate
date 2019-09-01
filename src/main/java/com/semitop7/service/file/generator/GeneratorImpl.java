@@ -1,37 +1,34 @@
-package com.semitop7.file.generator;
+package com.semitop7.service.file.generator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
+import static com.semitop7.constant.FileConstant.*;
 import static java.lang.String.format;
 
-public class Generator {
-    private static Logger LOGGER = LoggerFactory.getLogger(Generator.class);
-    private static volatile Generator instance;
-    private static final int RANGE = 'z' - 'a';
-    private static final int START = 'a';
-    private static final String FILE_NAME = "src/main/resources/file%d.txt";
+@Service
+public class GeneratorImpl implements Generator {
+    private static Logger LOGGER = LoggerFactory.getLogger(GeneratorImpl.class);
 
-    private Generator() {
-    }
-
-    public static Generator getInstance() {
-        if (instance == null) {
-            instance = new Generator();
-        }
-        return instance;
-    }
-
-    public void generateFiles(int fileCount, int fileSize, int stringLength) throws IOException {
+    @Override
+    public void generateFiles(String fileName,
+                              int fileCount,
+                              int fileSize,
+                              int stringLength) throws IOException {
         int count = 0;
+        fileName = StringUtils.isBlank(fileName) ? DEFAULT_FILE_NAME : fileName;
         while (count < fileCount) {
-            String name = format(FILE_NAME, ++count);
+            String name = format(fileName, ++count);
             StopWatch watch = StopWatch.createStarted();
             writeToFile(name, fileSize, stringLength);
             watch.stop();
@@ -39,15 +36,17 @@ public class Generator {
         }
     }
 
+    @Override
     public String[] generateFilePaths(int count, String filePathFormat) {
         String[] filePaths = new String[count];
-        for(int i = 1; i<= count; i++) {
+        for (int i = 1; i <= count; i++) {
             filePaths[i] = String.format(filePathFormat, count);
         }
         return filePaths;
     }
 
-    private void writeToFile(String fileName, int fileSize, int stringLength) throws IOException {
+    @Override
+    public void writeToFile(String fileName, int fileSize, int stringLength) throws IOException {
         File newFile = new File(fileName);
         if (!newFile.exists()) {
             Files.copy(createStream(fileSize, stringLength), Paths.get(newFile.toURI()));
